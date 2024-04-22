@@ -62,18 +62,66 @@
 		D00279CE2BD52CEE00E73F87 /* UIKITHomeWork8 */ = {
 			isa = PBXGroup;
 			children = (
-				D00279CF2BD52CEE00E73F87 /* AppDelegate.swift */,
-				D00279D12BD52CEE00E73F87 /* SceneDelegate.swift */,
-				D00279D82BD52CEF00E73F87 /* Assets.xcassets */,
-				D00279DA2BD52CEF00E73F87 /* LaunchScreen.storyboard */,
+				D00279F22BD6BA9A00E73F87 /* Cell */,
+				D00279F12BD6BA7500E73F87 /* View+Ext */,
+				D00279F02BD6BA4E00E73F87 /* Model */,
+				D00279EF2BD6BA2200E73F87 /* Resources */,
+				D00279EE2BD6B9F000E73F87 /* Controlles */,
+				D00279ED2BD6B9D700E73F87 /* Delegates */,
 				D00279DD2BD52CEF00E73F87 /* Info.plist */,
-				D00279E32BD52DA300E73F87 /* CountryListViewCV.swift */,
-				D00279E52BD52DB900E73F87 /* CountryDetailsViewCV.swift */,
-				D00279E72BD52DE500E73F87 /* CountryTableViewCell.swift */,
-				D00279E92BD52E0600E73F87 /* CountryModel.swift */,
-				D00279EB2BD52F2F00E73F87 /* UIView+Ext.swift */,
 			);
 			path = UIKITHomeWork8;
+			sourceTree = "<group>";
+		};
+		D00279ED2BD6B9D700E73F87 /* Delegates */ = {
+			isa = PBXGroup;
+			children = (
+				D00279D12BD52CEE00E73F87 /* SceneDelegate.swift */,
+				D00279CF2BD52CEE00E73F87 /* AppDelegate.swift */,
+			);
+			path = Delegates;
+			sourceTree = "<group>";
+		};
+		D00279EE2BD6B9F000E73F87 /* Controlles */ = {
+			isa = PBXGroup;
+			children = (
+				D00279E52BD52DB900E73F87 /* CountryDetailsViewCV.swift */,
+				D00279E32BD52DA300E73F87 /* CountryListViewCV.swift */,
+			);
+			path = Controlles;
+			sourceTree = "<group>";
+		};
+		D00279EF2BD6BA2200E73F87 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				D00279D82BD52CEF00E73F87 /* Assets.xcassets */,
+				D00279DA2BD52CEF00E73F87 /* LaunchScreen.storyboard */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		D00279F02BD6BA4E00E73F87 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				D00279E92BD52E0600E73F87 /* CountryModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		D00279F12BD6BA7500E73F87 /* View+Ext */ = {
+			isa = PBXGroup;
+			children = (
+				D00279EB2BD52F2F00E73F87 /* UIView+Ext.swift */,
+			);
+			path = "View+Ext";
+			sourceTree = "<group>";
+		};
+		D00279F22BD6BA9A00E73F87 /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				D00279E72BD52DE500E73F87 /* CountryTableViewCell.swift */,
+			);
+			path = Cell;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

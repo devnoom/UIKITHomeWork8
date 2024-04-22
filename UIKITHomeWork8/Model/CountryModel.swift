@@ -10,12 +10,10 @@ struct Map: Codable {
     }
 }
 
-
 struct Flags: Codable {
     let png: String?
     let svg: String?
     let alt: String?
-
 }
 
 struct postalCode: Codable {
@@ -26,6 +24,7 @@ struct postalCode: Codable {
 struct capitalInfo: Codable {
     let latlng: [Double]?
 }
+
 struct Name: Codable {
         let common: String?
         let official: String?
@@ -44,7 +43,6 @@ struct countries: Codable {
     let capitalInfo: capitalInfo?
     let postalCode: postalCode?
 }
-
 
 func fetchCountriesData(completion: @escaping ([countries]?, Error?) -> Void) {
     let url = URL(string: "https://restcountries.com/v3.1/all")!
@@ -68,7 +66,6 @@ func fetchCountriesData(completion: @escaping ([countries]?, Error?) -> Void) {
             completion(nil, error)
         }
     }
-    
     task.resume()
 }
 

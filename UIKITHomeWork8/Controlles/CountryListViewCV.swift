@@ -8,7 +8,6 @@ class CountryListViewCV: UIViewController {
         super.viewDidLoad()
         configureCountryTableView()
         
-        
         fetchCountriesData { [weak self] (countriesData, error) in
             guard let self = self else { return }
             if let error = error {
@@ -43,35 +42,29 @@ extension CountryListViewCV: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         print(countriesData.count)
         return countriesData.count
-      // Number of rows equals the number of countries
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CountryTableViewCell", for: indexPath) as! CountryTableViewCell
         let country = countriesData[indexPath.row]
-        cell.titleForTableRow.text = country.name?.common // Display country region in cell
+        cell.titleForTableRow.text = country.name?.common
         cell.accessoryType = .disclosureIndicator
 
-        // Load the image asynchronously
         if let flags = country.flags, let pngURLString = flags.png, let url = URL(string: pngURLString) {
             loadImage(from: url) { (image, error) in
                 DispatchQueue.main.async {
                     if let image = image {
                         cell.flagForTableRow.image = image
                     } else {
-                        // Handle error loading image
                         print("Error loading image:", error?.localizedDescription ?? "Unknown error")
                     }
                 }
             }
         } else {
-            // Handle missing or invalid URL
             print("Invalid or missing image URL for country at index:", indexPath.row)
         }
-
         return cell
     }
-
 }
 
 extension CountryListViewCV: UITableViewDelegate {
