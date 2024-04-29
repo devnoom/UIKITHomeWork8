@@ -5,9 +5,8 @@
 //  Created by MacBook Air on 21.04.24.
 //
 
-import Foundation
-
 import UIKit
+
 
 extension UIView {
     func pin(to superView: UIView) {

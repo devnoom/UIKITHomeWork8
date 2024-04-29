@@ -2,238 +2,233 @@ import UIKit
 import SafariServices
 
 class CountryDetailsViewCV: UIViewController {
-    var country: countries?
+    // MARK: - Properties
+    private var viewModel: CountryDetailsViewModel
+    init(viewModel: CountryDetailsViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    // MARK: - UI Components
+    let countryFlag = UIImageView()
+    let nativeNameKey = UILabel()
+    let spellingKey = UILabel()
+    let capitalKey = UILabel()
+    let statusKey = UILabel()
+    let regionKey = UILabel()
+    let postalCodeKey = UILabel()
+    
+    let nativeNameValue = UILabel()
+    let spellingValue = UILabel()
+    let capitalValue = UILabel()
+    let statusValue = UILabel()
+    let regionValue = UILabel()
+    let postalCodeValue = UILabel()
+    
+    private let AboutLabel: UILabel = {
+        let label = UILabel()
+        label.textAlignment = .left
+        label.numberOfLines = 0
+        label.font = UIFont.boldSystemFont(ofSize: 16)
+        return label
+    }()
+    
+    private let TextLabel: UILabel = {
+        let label = UILabel()
+        label.textAlignment = .left
+        label.numberOfLines = 0
+        label.font = UIFont.systemFont(ofSize: 14)
+        return label
+    }()
+   
     let scrollView: UIScrollView = {
         let scrollView = UIScrollView()
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-        scrollView.isDirectionalLockEnabled = true
-        scrollView.showsHorizontalScrollIndicator = true
-        scrollView.showsVerticalScrollIndicator = true
         return scrollView
     }()
-    let headerStack: UIStackView = {
-        let headerStack = UIStackView()
-        headerStack.translatesAutoresizingMaskIntoConstraints = false
-        return headerStack
-    }()
+    
     let contentView: UIView = {
         let contentView = UIView()
-        contentView.translatesAutoresizingMaskIntoConstraints = false
-        
         return contentView
     }()
-    let aboutStack: UIStackView = {
-        let aboutStack = UIStackView()
-        aboutStack.translatesAutoresizingMaskIntoConstraints = false
+    
+    private lazy var aboutStack: UIStackView = {
+        let aboutStack = UIStackView(arrangedSubviews: [AboutLabel, TextLabel])
+        aboutStack.axis = .vertical
+        aboutStack.alignment = .leading
+        aboutStack.distribution = .equalCentering
         return aboutStack
     }()
-    let uiView = UIView()
-    let infoKeyStack: UIStackView = {
-        let infoKeyStack = UIStackView()
+    
+    private lazy var infoKeyStack: UIStackView = {
+        let infoKeyStack = UIStackView(arrangedSubviews: [nativeNameKey, spellingKey, capitalKey, statusKey, regionKey, postalCodeKey])
         infoKeyStack.translatesAutoresizingMaskIntoConstraints = false
+        infoKeyStack.axis = .vertical
+        infoKeyStack.spacing = 5
+        infoKeyStack.distribution = .equalSpacing
+        infoKeyStack.alignment = .leading
         return infoKeyStack
     }()
-    let infoValueStack: UIStackView = {
-        let infoValueStack = UIStackView()
+    
+    private lazy var infoValueStack: UIStackView = {
+        let infoValueStack = UIStackView(arrangedSubviews: [nativeNameValue, spellingValue, capitalValue, statusValue, regionValue, postalCodeValue])
         infoValueStack.translatesAutoresizingMaskIntoConstraints = false
+        infoValueStack.axis = .vertical
+        infoValueStack.spacing = 5
+        infoValueStack.distribution = .equalSpacing
+        infoValueStack.alignment = .trailing
         return infoValueStack
     }()
+    
     let bottomStack: UIStackView = {
         let bottomStack = UIStackView()
         bottomStack.translatesAutoresizingMaskIntoConstraints = false
         return bottomStack
     }()
-    
+    // MARK: - LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        configureUI()
+        viewModel.loadFlag()
+        setupUI()
+        configureBottomStack()
+        
     }
     
-    func configureUI() {
+    private func setupUI() {
         view.backgroundColor = .white
+        
+        self.navigationItem.title = viewModel.commonCountryNameTitle
+        self.navigationController?.navigationBar.topItem?.backBarButtonItem = UIBarButtonItem(title: "Back", style: .done, target: nil, action: nil)
+        
+        self.regionKey.text = "region:"
+        self.postalCodeKey.text = "postal:"
+        self.statusKey.text = "status:"
+        self.capitalKey.text = "capital:"
+        self.nativeNameKey.text = "native:"
+        self.spellingKey.text = "spelling:"
+        
+        
+        self.regionValue.text = viewModel.countryRegion
+        self.postalCodeValue.text = viewModel.countryRegion
+        self.statusValue.text =  viewModel.countryRegion
+        self.capitalValue.text = viewModel.countryRegion
+        self.nativeNameValue.text = viewModel.countryRegion
+        self.spellingValue.text = viewModel.countryRegion
+        
+        self.AboutLabel.text = "About the flag"
+        self.TextLabel.text = viewModel.countryIndependenceDescription
+        
+        
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
-        contentView.addSubview(headerStack)
+        contentView.addSubview(countryFlag)
         contentView.addSubview(aboutStack)
         contentView.addSubview(infoKeyStack)
         contentView.addSubview(infoValueStack)
         contentView.addSubview(bottomStack)
         
-        configureHeaderStack()
-        configureInfoKeyStack()
-        configureAboutStack()
-        configureInfoValueStack()
-        configureBottomStack()
-        setConstraints()
-    }
-    
-    func configureBottomStack() {
-            let googleMapsImageView = UIImageView(image: UIImage(named: "google"))
-            googleMapsImageView.contentMode = .scaleAspectFit
-            googleMapsImageView.isUserInteractionEnabled = true
-            let googleMapsTapGesture = UITapGestureRecognizer(target: self, action: #selector(openGoogleMaps))
-            googleMapsImageView.addGestureRecognizer(googleMapsTapGesture)
-            
-            let openStreetMapsImageView = UIImageView(image: UIImage(named: "map"))
-            openStreetMapsImageView.contentMode = .scaleAspectFit
-            openStreetMapsImageView.isUserInteractionEnabled = true
-            let openStreetMapsTapGesture = UITapGestureRecognizer(target: self, action: #selector(openOpenStreetMaps))
-            openStreetMapsImageView.addGestureRecognizer(openStreetMapsTapGesture)
-            
-            bottomStack.axis = .horizontal
-            bottomStack.alignment = .center
-            bottomStack.distribution = .fillEqually
-            
-            bottomStack.addArrangedSubview(googleMapsImageView)
-            bottomStack.addArrangedSubview(openStreetMapsImageView)
-        }
-        
-        @objc func openGoogleMaps() {
-            if let googleMapsURL = URL(string: "https://maps.google.com") {
-                let safariViewController = SFSafariViewController(url: googleMapsURL)
-                present(safariViewController, animated: true, completion: nil)
-            }
-        }
-        
-        @objc func openOpenStreetMaps() {
-            if let openStreetMapsURL = URL(string: "https://www.openstreetmap.org") {
-                let safariViewController = SFSafariViewController(url: openStreetMapsURL)
-                present(safariViewController, animated: true, completion: nil)
-            }
-        }
-    
-    func configureHeaderStack() {
-        let countryName = UILabel()
-        countryName.translatesAutoresizingMaskIntoConstraints = false
-        countryName.text = country?.name?.common
-        headerStack.axis = .vertical
-        headerStack.alignment = .center
-        headerStack.addArrangedSubview(countryName)
-   
-        let countryFlag = UIImageView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        contentView.translatesAutoresizingMaskIntoConstraints = false
         countryFlag.translatesAutoresizingMaskIntoConstraints = false
-        countryFlag.contentMode = .scaleAspectFit // Adjust the content mode for proper image display
-        headerStack.addArrangedSubview(countryFlag)
+        aboutStack.translatesAutoresizingMaskIntoConstraints = false
+        infoKeyStack.translatesAutoresizingMaskIntoConstraints = false
+        bottomStack.translatesAutoresizingMaskIntoConstraints = false
         
-        if let flags = country?.flags, let pngURLString = flags.png, let url = URL(string: pngURLString) {
-            loadImage(from: url) { (image, error) in
-                DispatchQueue.main.async {
-                    if let image = image {
-                        countryFlag.image = image
-                    } else {
-                        print("Error loading image:", error?.localizedDescription ?? "Unknown error")
-                    }
-                }
-            }
-        } else {
-            print("Invalid or missing image URL for country flag")
-        }
-    }
-    
-    func configureAboutStack() {
-        let aboutTitle = UILabel()
-        aboutTitle.text = "about this country"
-        let descriptionAbout = UITextView()
-        descriptionAbout.text = "asdnaosndalsnflanslkfnaksnfalksnfklansfi;lnaSIFIUWBEFKNJSIBHUVDBAHINJSDAIHBUGVYCFGVJKNHGUVYCFTDXRCFGHVBJKNIHUGYFTCRDFHVA BJDHUAGYBHJSNFIAUSHYFVABHSFKNJASNIFHUASF"
-        descriptionAbout.isEditable = false
-        aboutStack.axis = .vertical
-        aboutStack.alignment = .leading
-
-        aboutStack.addArrangedSubview(aboutTitle)
-        aboutStack.addArrangedSubview(descriptionAbout)
-    }
-
-    func configureInfoKeyStack() {
-        let nativeNameKey = UILabel()
-        nativeNameKey.text = "native name"
-        let spellingKey = UILabel()
-        spellingKey.text = "spelling"
-        let capitalKey = UILabel()
-        capitalKey.text = "capital"
-        let currencyKey = UILabel()
-        currencyKey.text = "currency"
-        let regionKey = UILabel()
-        regionKey.text = "region"
-        let neightborsKey = UILabel()
-        neightborsKey.text = "neighbors"
         
-        infoKeyStack.axis = .vertical
-        infoKeyStack.distribution = .equalSpacing
         
-        infoKeyStack.addArrangedSubview(nativeNameKey)
-        infoKeyStack.addArrangedSubview(spellingKey)
-        infoKeyStack.addArrangedSubview(capitalKey)
-        infoKeyStack.addArrangedSubview(currencyKey)
-        infoKeyStack.addArrangedSubview(regionKey)
-        infoKeyStack.addArrangedSubview(neightborsKey)
-        
-    }
-    
-    func configureInfoValueStack() {
-        let nativeNameValue = UILabel()
-        nativeNameValue.text = country?.region
-        let spellingValue = UILabel()
-        spellingValue.text =  country?.altSpellings?.description
-        let capitalValue = UILabel()
-        capitalValue.text =  country?.capital?.first
-        let currencyValue = UILabel()
-        currencyValue.text = country?.capitalInfo.debugDescription
-        let regionValue = UILabel()
-        regionValue.text = country?.region?.lowercased()
-        let neightborsValue = UILabel()
-        neightborsValue.text = country?.subregion
-        
-        infoValueStack.axis = .vertical
-        infoValueStack.distribution = .equalSpacing
-        
-        infoValueStack.addArrangedSubview(nativeNameValue)
-        infoValueStack.addArrangedSubview(spellingValue)
-        infoValueStack.addArrangedSubview(capitalValue)
-        infoValueStack.addArrangedSubview(currencyValue)
-        infoValueStack.addArrangedSubview(regionValue)
-        infoValueStack.addArrangedSubview(neightborsValue)
-        
-    }
-    
-    func setConstraints() {
         NSLayoutConstraint.activate([
-            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            scrollView.leftAnchor.constraint(equalTo: view.leftAnchor),
-            scrollView.rightAnchor.constraint(equalTo: view.rightAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            scrollView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor),
+            scrollView.heightAnchor.constraint(equalTo: view.layoutMarginsGuide.heightAnchor),
+            scrollView.widthAnchor.constraint(equalTo: view.widthAnchor),
             
             contentView.topAnchor.constraint(equalTo:scrollView.topAnchor),
             contentView.leftAnchor.constraint(equalTo: scrollView.leftAnchor),
             contentView.rightAnchor.constraint(equalTo: scrollView.rightAnchor),
-            contentView.heightAnchor.constraint(greaterThanOrEqualTo: scrollView.heightAnchor, multiplier: 1.6),
             contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-            contentView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
+            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+            contentView.heightAnchor.constraint(equalTo: scrollView.heightAnchor, multiplier: 1.3),
             
-            headerStack.topAnchor.constraint(equalTo: contentView.topAnchor),
-            headerStack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15),
-            headerStack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15),
-            headerStack.heightAnchor.constraint(equalToConstant: 300),
+            countryFlag.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            countryFlag.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 20),
+            countryFlag.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            countryFlag.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+            countryFlag.heightAnchor.constraint(equalToConstant: 200),
             
-            aboutStack.topAnchor.constraint(equalTo: headerStack.bottomAnchor, constant: 30),
+            
+            
+            aboutStack.topAnchor.constraint(equalTo: countryFlag.bottomAnchor, constant: 20),
             aboutStack.heightAnchor.constraint(equalToConstant: 150),
-            aboutStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant:  15),
-            aboutStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -15),
+            aboutStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant:  20),
+            aboutStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             
-            infoKeyStack.topAnchor.constraint(equalTo: aboutStack.bottomAnchor, constant: 30),
-            infoKeyStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15),
+            infoKeyStack.topAnchor.constraint(equalTo: aboutStack.bottomAnchor, constant: 40),
+            infoKeyStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             infoKeyStack.widthAnchor.constraint(equalToConstant: 180),
             infoKeyStack.heightAnchor.constraint(equalToConstant: 400),
             
-            infoValueStack.topAnchor.constraint(equalTo: aboutStack.bottomAnchor, constant: 30),
-            infoValueStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -15),
+            infoValueStack.topAnchor.constraint(equalTo: aboutStack.bottomAnchor, constant: 40),
+            infoValueStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             infoValueStack.widthAnchor.constraint(equalToConstant: 180),
             infoValueStack.heightAnchor.constraint(equalToConstant: 400),
             
-            bottomStack.topAnchor.constraint(equalTo: infoValueStack.bottomAnchor, constant: 30),
-            bottomStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15),
-            bottomStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -15),
+            bottomStack.topAnchor.constraint(equalTo: infoValueStack.bottomAnchor, constant: 20),
+            bottomStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            bottomStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             bottomStack.heightAnchor.constraint(equalToConstant: 200)
-            
         ])
+        
     }
-}
+    
+    
+    func configureBottomStack() {
+        let googleMapsImage = UIImage(named: "google")
+        let googleMapsImageView = UIImageView(image: googleMapsImage)
+        googleMapsImageView.contentMode = .scaleAspectFit
+        googleMapsImageView.isUserInteractionEnabled = true
+        let googleMapsTapGesture = UITapGestureRecognizer(target: self, action: #selector(openGoogleMaps))
+        googleMapsImageView.addGestureRecognizer(googleMapsTapGesture)
+        googleMapsImageView.heightAnchor.constraint(equalToConstant: (googleMapsImage?.size.height ?? 0) * 3).isActive = true
+        googleMapsImageView.widthAnchor.constraint(equalToConstant: (googleMapsImage?.size.width ?? 0) * 3).isActive = true
+        
+        let openStreetMapsImage = UIImage(named: "map")
+        let openStreetMapsImageView = UIImageView(image: openStreetMapsImage)
+        openStreetMapsImageView.contentMode = .scaleAspectFit
+        openStreetMapsImageView.isUserInteractionEnabled = true
+        let openStreetMapsTapGesture = UITapGestureRecognizer(target: self, action: #selector(openOpenStreetMaps))
+        openStreetMapsImageView.addGestureRecognizer(openStreetMapsTapGesture)
+        openStreetMapsImageView.heightAnchor.constraint(equalToConstant: (openStreetMapsImage?.size.height ?? 0) * 3).isActive = true
+        openStreetMapsImageView.widthAnchor.constraint(equalToConstant: (openStreetMapsImage?.size.width ?? 0) * 3).isActive = true
+        
+        bottomStack.axis = .horizontal
+        bottomStack.alignment = .center
+        bottomStack.distribution = .fillEqually
+        
+        bottomStack.addArrangedSubview(googleMapsImageView)
+        bottomStack.addArrangedSubview(openStreetMapsImageView)
+    }
+
+    
+    // MARK: - Load Flag
+    func loadFlag(){
+        viewModel.onFetchImage = {[weak self] image in
+            let image = UIImage(data: image)
+            DispatchQueue.main.async {
+                self?.countryFlag.image = image
+            }
+        }
+    }
+    // MARK: - Navigation To Safari
+    @objc func openOpenStreetMaps() {
+        UIApplication.shared.open(viewModel.openStreetMapsUrl!, options: [:], completionHandler: nil)
+    }
+    
+    @objc func openGoogleMaps() {
+        UIApplication.shared.open(viewModel.googleMapsUrl!, options: [:], completionHandler: nil)
+    }
+    }
+

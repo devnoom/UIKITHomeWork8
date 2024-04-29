@@ -10,10 +10,15 @@ import UIKit
 
 extension CountryMainPageController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        viewModel.numberOfCountries
+        let inSearchMode = self.viewModel.inSearchMode(searchController)
+        
+        return inSearchMode ? self.viewModel.filteredCountries.count: self.viewModel.countriesArray.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let inSearchMode = self.viewModel.inSearchMode(searchController)
+        let country = inSearchMode ? self.viewModel.filteredCountries[indexPath.row] :
+        self.viewModel.countriesArray[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: "CountryTableViewCell", for: indexPath) as! CountryTableViewCell
 
         let countryCellViewModel = viewModel.countryTableViewCellViewModel[indexPath.row]
@@ -30,6 +35,10 @@ extension CountryMainPageController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         viewModel.navigateToCountryDetails(index: indexPath.row)
+        
+        let inSearchMode = self.viewModel.inSearchMode(searchController)
+        let country = inSearchMode ? self.viewModel.filteredCountries[indexPath.row] :
+        self.viewModel.countriesArray[indexPath.row]
     }
 }
 
