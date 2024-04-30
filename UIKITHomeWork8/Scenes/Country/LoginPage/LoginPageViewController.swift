@@ -6,10 +6,11 @@
 //
 
 import UIKit
-class LoginPageViewController: UIViewController {
-
+class LoginPageViewController: UIViewController, LoginPageViewModelDelegate {
+    
     // MARK: - Variables
     let viewModel = LoginPageViewModel()
+    
     
     // MARK: - UI Components
     let imageView: UIImageView = {
@@ -26,7 +27,7 @@ class LoginPageViewController: UIViewController {
         return userNameLabel
     }()
     let passwordLabel: UILabel = {
-       let passwordLabel = UILabel()
+        let passwordLabel = UILabel()
         passwordLabel.translatesAutoresizingMaskIntoConstraints = false
         return passwordLabel
     }()
@@ -55,29 +56,30 @@ class LoginPageViewController: UIViewController {
         loginButton.translatesAutoresizingMaskIntoConstraints = false
         loginButton.setTitle("Login", for: .normal)
         loginButton.addTarget(self, action: #selector(loginButtonTapped(_:)), for: .touchUpInside)
-
+        
         return loginButton
     }()
     
     
     // MARK: - LifeCycle
     override func viewDidLoad() {
-            super.viewDidLoad()
-            setupUI()
-           
-            if viewModel.isNewUser() {
-                // If it's a new user, show the login page
-                // (No need to check for isFirstLogin)
-            } else {
-                // If it's not a new user, navigate to the next page directly
-                let mainPageVC = CountryMainPageController()
-                self.navigationController?.pushViewController(mainPageVC, animated: true)
-            }
-            
-            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageViewTapped))
-            imageView.addGestureRecognizer(tapGesture)
-        }
-
+        super.viewDidLoad()
+        setupUI()
+        viewModel.delegate = self
+        //            if viewModel.isNewUser() {
+        //                // If it's a new user, show the login page
+        //                // (No need to check for isFirstLogin)
+        //            } else {
+        //                // If it's not a new user, navigate to the next page directly
+        //                let mainPageVC = CountryMainPageController()
+        //                self.navigationController?.pushViewController(mainPageVC, animated: true)
+        //            }
+        
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageViewTapped))
+        imageView.addGestureRecognizer(tapGesture)
+    }
+    
     // MARK: - UI Setup
     func setupUI() {
         view.backgroundColor = .white
@@ -101,22 +103,19 @@ class LoginPageViewController: UIViewController {
         loginButton.backgroundColor = .blue
         loginButton.layer.cornerRadius = 25
         
-        imageView.backgroundColor = .black
-        //selectImageButton.backgroundColor = .white
-       
-            usernameTextField.textColor = .darkGray
-            passwordTextField.textColor = .darkGray
-            repeatPasswordTextField.textColor = .darkGray
-            
-            usernameTextField.backgroundColor = UIColor.lightGray.withAlphaComponent(0.1)
-            passwordTextField.backgroundColor = UIColor.lightGray.withAlphaComponent(0.1)
-            repeatPasswordTextField.backgroundColor = UIColor.lightGray.withAlphaComponent(0.1)
-    
+        usernameTextField.textColor = .darkGray
+        passwordTextField.textColor = .darkGray
+        repeatPasswordTextField.textColor = .darkGray
+        
+        usernameTextField.backgroundColor = UIColor.lightGray.withAlphaComponent(0.1)
+        passwordTextField.backgroundColor = UIColor.lightGray.withAlphaComponent(0.1)
+        repeatPasswordTextField.backgroundColor = UIColor.lightGray.withAlphaComponent(0.1)
+        
         usernameTextField.layer.cornerRadius = 30
         passwordTextField.layer.cornerRadius = 30
         repeatPasswordTextField.layer.cornerRadius = 30
-
-            
+        
+        
         
         NSLayoutConstraint.activate([
             imageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor,constant: 100),
@@ -159,87 +158,71 @@ class LoginPageViewController: UIViewController {
         ])
         
     }
-// MARK: - Login Function
+    // MARK: - Login Function
     @objc func loginButtonTapped(_ sender: UIButton) {
-            guard let username = usernameTextField.text, !username.isEmpty,
-                  let password = passwordTextField.text, !password.isEmpty,
-                  let repeatPassword = repeatPasswordTextField.text, !repeatPassword.isEmpty else {
-                showAlert(message: "Please fill in all fields.")
-                return
-            }
-            
-            if password == repeatPassword {
-                if viewModel.isNewUser() {
-                    // If it's a new user, save credentials and show welcome alert
-                    viewModel.saveCredentials(username: username, password: password)
-                    viewModel.saveImageInfo("Information about chosen image")
-                    showWelcomeAlert()
-                } else {
-                    // If it's an existing user, validate credentials
-                    if viewModel.validateLogin(username: username, password: password) {
-                        // If credentials are correct, navigate to next page
-                        let mainPageVC = CountryMainPageController()
-                        self.navigationController?.pushViewController(mainPageVC, animated: true)
-                    } else {
-                        // If credentials are incorrect, show alert
-                        showWrongPasswordAlert()
-                    }
-                }
+        guard let username = usernameTextField.text, !username.isEmpty,
+              let password = passwordTextField.text, !password.isEmpty,
+              let repeatPassword = repeatPasswordTextField.text, !repeatPassword.isEmpty else {
+            showAlert(message: "შეავსეთ ცარიელი ველები")
+            return
+        }
+        
+        if password == repeatPassword {
+            if viewModel.validateLogin(username: username, password: password) {
+                navigateToCountryController()
             } else {
-                // If passwords don't match, show alert
-                showAlert(message: "Passwords do not match.")
+                viewModel.saveCredentials(username: username, password: password)
+                UserDefaults.standard.setValue(true, forKey: "Key")
+                navigateToCountryController()
+                showWelcomeAlert()
             }
-        }
-    
-    func showWrongPasswordAlert() {
-            let alert = UIAlertController(title: "Error", message: "Incorrect username or password.", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
-        }
-
-
-    func isNewUser(username: String) -> Bool {
-        // Check if the user is new based on UserDefaults
-        if UserDefaults.standard.string(forKey: "username") == nil {
-            // If the username doesn't exist in UserDefaults, it's a new user
-            // Save the username to UserDefaults for future reference
-            UserDefaults.standard.set(username, forKey: "username")
-            return true
         } else {
-            // If the username exists in UserDefaults, it's an existing user
-            return false
+            // If passwords don't match, show alert
+            showAlert(message: "Passwords do not match.")
         }
     }
-
-    // MARK: - Allerts
+    
+    // MARK: - Navigation
+    func navigateToCountryController() {
+        print("Navigating to CountryMainPageController")
+        guard let navigationController = self.navigationController else {
+            print("Navigation Controller is nil")
+            return
+        }
+        let mainPageVC = CountryMainPageController()
+        navigationController.pushViewController(mainPageVC, animated: true)
+    }
+    
+    
+    // MARK: - Alerts
     func showWelcomeAlert() {
-        let alert = UIAlertController(title: "სალამი 🙋🏻‍♂️", message: "წარმატებით დარეგისტრირდი", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "გასაგებლარია", style: .default, handler: nil))
+        let alert = UIAlertController(title: "მოგესალმებით ", message: "დიდად არაწვალოთ ჭედავს მერე!", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "გავითვალისწინებ!", style: .default, handler: nil))
         self.present(alert, animated: true, completion: nil)
     }
-    func showWrongAccount() {
-        let alert = UIAlertController(title: "სალამი 🙋🏻‍♂️", message: "რაცხა შეგყავს არასწორად", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "გასაგებლარია", style: .default, handler: nil))
-        self.present(alert, animated: true, completion: nil)
-    }
-
-    // MARK: - Image View Tapped
-    @objc func imageViewTapped() {
-        let imagePickerController = UIImagePickerController()
-        imagePickerController.delegate = self
-        imagePickerController.sourceType = .photoLibrary
-        present(imagePickerController, animated: true, completion: nil)
-    }
-
-    // MARK: - Image Selection
     
     func showAlert(message: String) {
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
         present(alert, animated: true, completion: nil)
     }
-}
-
-#Preview {
-    LoginPageViewController()
+    
+    
+    // MARK: - Image View Tapped
+    @objc func imageViewTapped() {
+        let imagePickerController = UIImagePickerController()
+        imagePickerController.delegate = self
+        imagePickerController.sourceType = .photoLibrary
+        present(imagePickerController, animated: true, completion: nil)
+        
+    }
+    
+    //MARK: - Image Selection
+    func didSaveImage(success: Bool, errorMessage: String?) {
+        if success {
+            print("შეინახა")
+        } else {
+            print("არ შეინახა")
+        }
+    }
 }

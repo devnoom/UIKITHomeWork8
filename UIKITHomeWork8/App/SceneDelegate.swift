@@ -7,10 +7,20 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let scene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: scene)
-        let firstViewController = LoginPageViewController()
-        let navigationController = UINavigationController(rootViewController: firstViewController)
-        window?.rootViewController = navigationController
+        
+        let rootViewController = determineRootViewController()
+        window?.rootViewController = rootViewController
         window?.makeKeyAndVisible()
     }
-
+    
+    func determineRootViewController() -> UIViewController {
+        let isUserLoggedIn = UserDefaults.standard.bool(forKey: "Key")
+        if isUserLoggedIn {
+            return CountryMainPageController()
+        } else {
+            let loginViewController = LoginPageViewController()
+            let navigationController = UINavigationController(rootViewController: loginViewController)
+            return navigationController
+        }
+    }
 }

@@ -12,12 +12,10 @@ class ImageService {
     private init(){}
     func loadImageFromURL(_ urlString: String, completion: @escaping (UIImage?) -> Void) {
         guard let url = URL(string: urlString) else {
-            //თუ ვერ შექიმნა ვაწოდებთ ნილს
             completion(nil)
             return
         }
         URLSession.shared.dataTask(with: url) { data, response, error in
-            //ერორზე ან მონაცემთა არ ქონაზე შემოწმება
             guard error == nil, let data = data else {
                 print("Error fetching image:", error?.localizedDescription ?? "Unknown error")
                 completion(nil)

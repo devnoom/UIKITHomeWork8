@@ -16,7 +16,7 @@ class KeychainService {
     func save(username: String, password: String) {
         do {
             try save(
-                service: "your_service_identifier", // Change this to your service identifier
+                service: "your_service_identifier",
                 account: username,
                 password: password.data(using: .utf8) ?? Data()
             )

@@ -2,28 +2,42 @@ import Foundation
 
 import Foundation
 
+protocol LoginPageViewModelDelegate: AnyObject {
+    func didSaveImage(success: Bool, errorMessage: String?)
+}
+
 class LoginPageViewModel {
-    private let customFileManager = CustomFileManager() // Assuming CustomFileManager is your custom file manager class
+    var delegate: LoginPageViewModelDelegate?
+    
+    
     private let keychainService = KeychainService.shared
     
-    // Function to save username and password to Keychain
     func saveCredentials(username: String, password: String) {
         keychainService.save(username: username, password: password)
     }
     
-    // Function to check if the user is new
-    func isNewUser() -> Bool {
-        return keychainService.getPassword(username: "username") == nil
-    }
-    
-    // Function to validate login credentials
     func validateLogin(username: String, password: String) -> Bool {
         return keychainService.getPassword(username: username) == password
     }
     
-    // Function to save image information to CustomFileManager
-    func saveImageInfo(_ info: String) {
-        customFileManager.saveImageInfo(info)
-    }
+    
+    
+    func getDocumentsDirectory() -> URL {
+            let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+            return paths[0]
+        }
+    
+    func saveImageData(_ imageData: Data, with filename: String) {
+            let filePath = getDocumentsDirectory().appendingPathComponent(filename)
+            
+            do {
+                try imageData.write(to: filePath)
+                print("Image saved at: \(filePath)")
+                delegate?.didSaveImage(success: true, errorMessage: nil)
+            } catch {
+                print("Error saving image: \(error)")
+                delegate?.didSaveImage(success: false, errorMessage: "Failed to save image to documents directory.")
+            }
+        }
 }
 

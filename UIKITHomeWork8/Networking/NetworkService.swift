@@ -23,7 +23,6 @@ class NetworkService {
         URLSession.shared.dataTask(with: URLRequest(url: url)) { data, response, error in
             
             if let error {
-                //ერორის დაპრინტვა
                 print(error.localizedDescription)
             }
             
@@ -32,11 +31,9 @@ class NetworkService {
             }
             
             guard (200...299).contains(response.statusCode) else {
-                //არასწორი პასუხი თუ მივიღე რომ გავიგო
                 print("wrong response")
                 return
             }
-            //მონაცემის არ ქონაზე შემოწმება
             guard let data else { return }
 
             do {
@@ -46,7 +43,6 @@ class NetworkService {
                     comletion(.success(object))
                 }
             } catch {
-                //ერორის გადმოწოდება
                 comletion(.failure(NetworkError.decodeError))
             }
         }.resume()

@@ -20,7 +20,6 @@
 		D03D74A32BE0363100371338 /* LoginPageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03D74A22BE0363100371338 /* LoginPageViewModel.swift */; };
 		D03D74A52BE0486600371338 /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03D74A42BE0486600371338 /* KeychainService.swift */; };
 		D03D74A82BE0593B00371338 /* LoginPageExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03D74A72BE0593B00371338 /* LoginPageExtension.swift */; };
-		D03D74AA2BE0726100371338 /* CustomFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03D74A92BE0726100371338 /* CustomFileManager.swift */; };
 		D04B8EED2BDE88FF00A587B4 /* CountryMainPageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04B8EEC2BDE88FF00A587B4 /* CountryMainPageViewModel.swift */; };
 		D04B8EF02BDE892C00A587B4 /* CountryDetailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04B8EEF2BDE892C00A587B4 /* CountryDetailsViewModel.swift */; };
 		D04B8EF32BDE8A5100A587B4 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04B8EF22BDE8A5100A587B4 /* NetworkService.swift */; };
@@ -45,7 +44,6 @@
 		D03D74A22BE0363100371338 /* LoginPageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginPageViewModel.swift; sourceTree = "<group>"; };
 		D03D74A42BE0486600371338 /* KeychainService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainService.swift; sourceTree = "<group>"; };
 		D03D74A72BE0593B00371338 /* LoginPageExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginPageExtension.swift; sourceTree = "<group>"; };
-		D03D74A92BE0726100371338 /* CustomFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomFileManager.swift; sourceTree = "<group>"; };
 		D04B8EEC2BDE88FF00A587B4 /* CountryMainPageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryMainPageViewModel.swift; sourceTree = "<group>"; };
 		D04B8EEF2BDE892C00A587B4 /* CountryDetailsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryDetailsViewModel.swift; sourceTree = "<group>"; };
 		D04B8EF22BDE8A5100A587B4 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
@@ -135,7 +133,6 @@
 				D03D74A02BE004B500371338 /* LoginPageViewController.swift */,
 				D03D74A22BE0363100371338 /* LoginPageViewModel.swift */,
 				D03D74A42BE0486600371338 /* KeychainService.swift */,
-				D03D74A92BE0726100371338 /* CustomFileManager.swift */,
 				D03D74A62BE0592400371338 /* Extension */,
 			);
 			path = LoginPage;
@@ -306,7 +303,6 @@
 				D00279EC2BD52F2F00E73F87 /* UIView+Ext.swift in Sources */,
 				D04B8EF52BDE8A6000A587B4 /* ImageService.swift in Sources */,
 				D00279E62BD52DB900E73F87 /* CountryDetailsViewCV.swift in Sources */,
-				D03D74AA2BE0726100371338 /* CustomFileManager.swift in Sources */,
 				D04B8EFB2BDEA04B00A587B4 /* CountryTableViewCellViewModel.swift in Sources */,
 				D00279E82BD52DE500E73F87 /* CountryTableViewCell.swift in Sources */,
 			);

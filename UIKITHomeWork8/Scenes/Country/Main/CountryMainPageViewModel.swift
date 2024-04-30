@@ -33,13 +33,11 @@ class CountryMainPageViewModel {
     }
     
     // MARK: - Child Method
-    
     func getCountries() {
         getData()
     }
     
     //    MARK: - Requests
-        
         private func getData() {
             NetworkService.networkService.getData(urlString: urlString) { (result: Result<[Country], Error>) in
                 switch result {

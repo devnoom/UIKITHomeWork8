@@ -11,6 +11,11 @@ extension LoginPageViewController: UIImagePickerControllerDelegate & UINavigatio
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         if let pickedImage = info[.originalImage] as? UIImage {
             imageView.image = pickedImage
+            if let imageData = pickedImage.pngData() {
+                viewModel.saveImageData(imageData, with: "gallery_image.png")
+                        } else {
+                           print("ერორი")
+                        }
         }
         dismiss(animated: true, completion: nil)
     }

@@ -23,9 +23,6 @@ class CountryMainPageController: UIViewController {
         viewModel.didLoad()
         reloadData()
         navigateToDetails()
-        //configureCountryTableView()
-        
-        
     }
     // MARK: - UI Setup
     func configureCountryTableView() {
@@ -39,7 +36,8 @@ class CountryMainPageController: UIViewController {
         countryTableView.separatorStyle = .none
         countryTableView.pin(to: view)
     }
-    
+   
+    // MARK: - Search Controller Functions
     private func setupSearchController() {
         self.searchController.searchResultsUpdater = self
         self.searchController.obscuresBackgroundDuringPresentation = false
@@ -51,9 +49,6 @@ class CountryMainPageController: UIViewController {
         self.navigationItem.hidesSearchBarWhenScrolling = false
     }
     
-    // MARK: - Search Controller Functions
-    
-    
     // MARK: - Reload Data
     private func reloadData() {
         viewModel.onCountryUpdated = { [weak self ] in
@@ -63,8 +58,6 @@ class CountryMainPageController: UIViewController {
         }
     }
     
-    
-    
     // MARK: - Navigation To Details
     func navigateToDetails() {
         viewModel.onCountriesSelected = { [weak self] country in
@@ -73,7 +66,6 @@ class CountryMainPageController: UIViewController {
             self?.navigationController?.pushViewController(countryDetailsViewController, animated: false)
         }
     }
-   
 }
 
 

@@ -48,6 +48,7 @@ extension CountryMainPageController: UISearchResultsUpdating {
         self.viewModel.updateSearchController(searchBarText: searchController.searchBar.text)
     }
 }
+
 // MARK: - View Model Extension
 extension CountryMainPageViewModel {
     public func inSearchMode(_ searchController: UISearchController) -> Bool {
@@ -69,7 +70,6 @@ extension CountryMainPageViewModel {
                 }
             }
         }
-        
         self.onCountryUpdated?()
     }
 }

@@ -59,7 +59,6 @@ class CountryTableViewCell: UITableViewCell {
     func updateCell(with item: CountryTableViewCellViewModel) {
         countryTitle.text = item.countryName
         countryFlag.fetchImage(url: item.flagUrl!)
-        
     }
     
 }

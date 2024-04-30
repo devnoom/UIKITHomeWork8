@@ -44,31 +44,6 @@ struct Country: Codable {
     let postalCode: postalCode?
 }
 
-//func fetchCountriesData(completion: @escaping ([countries]?, Error?) -> Void) {
-//    let url = URL(string: "https://restcountries.com/v3.1/all")!
-//    
-//    let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
-//        if let error = error {
-//            completion(nil, error)
-//            return
-//        }
-//        
-//        guard let data = data else {
-//            completion(nil, NSError(domain: "Data not found", code: 404, userInfo: nil))
-//            return
-//        }
-//        
-//        do {
-//            let decoder = JSONDecoder()
-//            let countriesData = try decoder.decode([countries].self, from: data)
-//            completion(countriesData, nil)
-//        } catch {
-//            completion(nil, error)
-//        }
-//    }
-//    task.resume()
-//}
-
 func loadImage(from url: URL, completion: @escaping (UIImage?, Error?) -> Void) {
     URLSession.shared.dataTask(with: url) { data, response, error in
         guard let data = data, let image = UIImage(data: data), error == nil else {
