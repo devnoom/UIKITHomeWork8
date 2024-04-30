@@ -4,6 +4,8 @@ import SafariServices
 class CountryDetailsViewCV: UIViewController {
     // MARK: - Properties
     private var viewModel: CountryDetailsViewModel
+    
+    // MARK: - Init
     init(viewModel: CountryDetailsViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -91,11 +93,13 @@ class CountryDetailsViewCV: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel.loadFlag()
+        loadFlag()
         setupUI()
         configureBottomStack()
         
+        
     }
-    
+    // MARK: - Setup UI
     private func setupUI() {
         view.backgroundColor = .white
         
@@ -184,7 +188,7 @@ class CountryDetailsViewCV: UIViewController {
         
     }
     
-    
+    // MARK: - Configure Bottom Stack
     func configureBottomStack() {
         let googleMapsImage = UIImage(named: "google")
         let googleMapsImageView = UIImageView(image: googleMapsImage)
